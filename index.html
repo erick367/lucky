@@ -16,8 +16,8 @@
         body {
             font-family: 'Inter', sans-serif; /* Default font */
             background:
-                url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23166534' fill-opacity='0.08'%3E%3Ccircle cx='20' cy='60' r='3'/%3E%3Ccircle cx='70' cy='10' r='2'/%3E%3C/g%3E%3Cg fill='%23A855F7' fill-opacity='0.07'%3E%3C!-- Teddy Head --%3E%3Ccircle cx='55' cy='25' r='5'/%3E%3Ccircle cx='50' cy='20' r='3'/%3E%3Ccircle cx='60' cy='20' r='3'/%3E%3C!-- Another Teddy Head --%3E%3Ccircle cx='15' cy='45' r='4'/%3E%3Ccircle cx='11' cy='41' r='2.5'/%3E%3Ccircle cx='19' cy='41' r='2.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
-                linear-gradient(135deg, #fce7f3 0%, #dcfce7 100%);
+                url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23166534' fill-opacity='0.10'%3E%3Ccircle cx='20' cy='60' r='3'/%3E%3Ccircle cx='70' cy='10' r='2'/%3E%3C/g%3E%3Cg fill='%23A855F7' fill-opacity='0.07'%3E%3C!-- Teddy Head --%3E%3Ccircle cx='55' cy='25' r='5'/%3E%3Ccircle cx='50' cy='20' r='3'/%3E%3Ccircle cx='60' cy='20' r='3'/%3E%3C!-- Another Teddy Head --%3E%3Ccircle cx='15' cy='45' r='4'/%3E%3Ccircle cx='11' cy='41' r='2.5'/%3E%3Ccircle cx='19' cy='41' r='2.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                linear-gradient(135deg, #fce7f3 0%, #bbf7d0 100%); /* pink-50 to green-100 */
             overflow-x: hidden;
             min-height: 100vh;
         }
@@ -27,6 +27,7 @@
             font-family: 'Pacifico', cursive;
         }
 
+        /* Main content container - Styling handled by Tailwind classes */
         /* Styling for individual countdown blocks */
         .countdown-block {
             background-color: #ffffff; padding: 1rem 1.5rem; border-radius: 0.75rem;
@@ -57,17 +58,28 @@
             to { box-shadow: 0 0 20px #166534, 0 0 30px rgba(22, 101, 52, 0.7), 0 0 12px rgba(236, 72, 153, 0.3); }
         }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes bounceWord { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
+        /* Restored bounceWord keyframes to match bounce */
+        @keyframes bounceWord {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        /* Message Bubble Bounce */
+        @keyframes bubbleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
 
         /* Apply animations */
-        .avatar {
-            width: 120px; height: 120px; margin: 2rem auto;
+        .avatar { /* Main avatar */
+            width: 120px; height: 120px;
             animation: bounce 2s infinite;
             display: flex; align-items: center; justify-content: center;
             background-color: #166534; border: 3px solid #FFFFFF;
             border-radius: 50%; color: #FFFFFF; font-size: 1.75rem;
             font-weight: 600; text-align: center;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
         .fade-in { animation: fadeIn 1s ease-in; }
         .heart-beat { animation: heartBeat 2s infinite; }
@@ -77,21 +89,26 @@
         .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         .glow { animation: glow 2s ease-in-out infinite alternate; }
         .rotate { animation: rotate 3s linear infinite; }
-        .bounce-word { display: inline-block; animation: bounceWord 2s infinite; }
+        /* Restored bounce-word class styling */
+        .bounce-word {
+            display: inline-block;
+            animation: bounceWord 2s infinite;
+            /* Removed inline animation-delay */
+        }
 
         /* Styling for message sections - ADDED BORDERS */
         .bible-verse {
             font-style: italic; background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%);
             padding: 1.5rem; border-radius: 1rem; margin: 2rem 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px);
-            border: 1px solid rgba(236, 72, 153, 0.3); /* Subtle pink border */
+            border: 1px solid rgba(236, 72, 153, 0.3);
         }
         .birthday-message {
             text-align: center; margin: 2rem 0; padding: 2rem;
             background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%);
             border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transform: perspective(1000px) rotateX(5deg); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(236, 72, 153, 0.3); /* Subtle pink border */
+            border: 1px solid rgba(236, 72, 153, 0.3);
         }
         .birthday-message:hover { transform: perspective(1000px) rotateX(0deg) translateY(-5px); }
         .quality-time-message {
@@ -99,12 +116,10 @@
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
             border-radius: 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
             text-align: center; font-size: 0.95rem; line-height: 1.6; min-height: 150px;
-            border: 1px solid rgba(236, 72, 153, 0.3); /* Subtle pink border */
+            border: 1px solid rgba(236, 72, 153, 0.3);
         }
-        /* Style for closing message box */
         .closing-message {
-             border: 1px solid rgba(236, 72, 153, 0.3); /* Subtle pink border */
-             /* Inherits padding, background, etc from inline Tailwind classes */
+             border: 1px solid rgba(236, 72, 153, 0.3);
         }
 
 
@@ -120,9 +135,34 @@
         /* Blinking cursor effect */
         .typing-cursor { display: inline-block; width: 2px; height: 1em; background-color: #6b7280; animation: blink 0.7s infinite; margin-left: 2px; vertical-align: text-bottom; }
 
+        /* Peeping Avatar Styles - REPOSITIONED */
+        #peeping-avatar-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            order: -1;
+        }
+        #peeping-avatar-img {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background-color: #f0fdf4;
+            object-fit: contain;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+        #peeping-message {
+            display: inline-block;
+            background-color: white; color: #374151;
+            padding: 0.4rem 0.8rem; border-radius: 1rem; font-size: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap;
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease-in-out;
+            animation: bubbleBounce 1.5s ease-in-out infinite;
+        }
+
         /* Reduced motion accessibility */
         @media (prefers-reduced-motion: reduce) {
-           .avatar, .heart-beat, .float, .twinkle, .slide-in, .pulse, .glow, .rotate, .bounce-word, .typing-cursor {
+           .avatar, .heart-beat, .float, .twinkle, .slide-in, .pulse, .glow, .rotate, .bounce-word, .typing-cursor, #peeping-message {
             animation: none !important;
             transition: none !important;
           }
@@ -130,34 +170,49 @@
 
         /* Responsive adjustments */
         @media (max-width: 640px) {
+            .avatar-wrapper { flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+            #peeping-avatar-container { order: 0; }
             .countdown-container { gap: 0.5rem; margin: 1.5rem 0; }
             .countdown-block { padding: 0.75rem 1rem; min-width: 60px; }
             .countdown-value { font-size: 2rem; }
             .avatar { width: 100px; height: 100px; font-size: 1.5rem; }
-            .birthday-message, .quality-time-message, .closing-message { margin: 1.5rem 0; padding: 1.5rem; } /* Added closing message */
+            #peeping-avatar-img { width: 50px; height: 50px; padding: 3px; }
+            .birthday-message, .quality-time-message, .closing-message { margin: 1.5rem 0; padding: 1.5rem; }
             .bible-verse { margin: 1.5rem 0; padding: 1.25rem; }
             .locked-message-box { margin: 1.5rem 0; padding: 1.25rem; }
             #reveal-container { padding: 1.5rem; }
-            @keyframes bounceWord { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } 60% { transform: translateY(-3px); } }
+            /* Restored bounceWord responsive keyframes */
+             @keyframes bounceWord {
+                 0%, 100% { transform: translateY(0); }
+                 50% { transform: translateY(-8px); } /* Slightly less bounce for words on mobile */
+             }
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg max-w-lg w-full text-center overflow-hidden">
+    <div class="main-content-box bg-white p-6 sm:p-8 rounded-xl shadow-lg max-w-lg w-full text-center overflow-hidden">
 
         <h1 id="main-title" class="text-2xl sm:text-3xl font-bold mb-4 slide-in">
             <span class="text-pink-600">
-                <span class="bounce-word" style="animation-delay: 0s;">Ras</span>
-                <span class="bounce-word" style="animation-delay: 0.1s;">Toto's</span>
+                <span class="bounce-word">Ras</span>
+                <span class="bounce-word">Toto's</span>
             </span>
-            <span style="color: #166534;"> <span class="bounce-word" style="animation-delay: 0.2s;">Special</span>
-                <span class="bounce-word" style="animation-delay: 0.3s;">Day</span>
+            <span style="color: #166534;">
+                <span class="bounce-word">Special</span>
+                <span class="bounce-word">Day</span>
             </span>
         </h1>
         <p class="text-gray-700 mb-8 slide-in">Tick Tock.......</p>
 
-        <div class="avatar">Editing</div>
+        <div class="avatar-wrapper flex justify-center items-center gap-4 my-8">
+             <div id="peeping-avatar-container" class="flex items-center gap-2">
+                 <img id="peeping-avatar-img" src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f415.svg" alt="Watchdog avatar">
+                <div id="peeping-message">Ta-daaa...</div>
+            </div>
+             <div class="avatar" id="avatar-text">Editing</div>
+        </div>
+
 
         <div id="countdown-container" class="countdown-container">
              <div class="countdown-block"> <div id="days" class="countdown-value">00</div> <div class="countdown-label">Days</div> </div>
@@ -173,11 +228,12 @@
 
         <div id="birthday-title-message" class="hidden text-3xl font-bold my-8 slide-in">
             <span class="text-pink-600">
-                <span class="bounce-word" style="animation-delay: 0s;">🎉</span>
-                <span class="bounce-word" style="animation-delay: 0.1s;">Happy</span>
+                <span class="bounce-word">🎉</span>
+                <span class="bounce-word">Happy</span>
             </span>
-            <span style="color: #166534;"> <span class="bounce-word" style="animation-delay: 0.2s;">Birthday</span>
-                <span class="bounce-word" style="animation-delay: 0.3s;">lucky!!🎉</span>
+            <span style="color: #166534;">
+                <span class="bounce-word">Birthday</span>
+                <span class="bounce-word">lucky!!🎉</span>
             </span>
         </div>
 
@@ -193,16 +249,16 @@
 
                 <div class="birthday-message text-center">
                     <p class="text-lg mb-2 font-semibold text-pink-600">Happy 25th Birthday, Wanja! ✨</p>
-                    <p class="text-lg mb-2">Okay, attempting the heartfelt message again (sasaaaa!). Twenty-five years – that's truly incredible!</p>
-                    <p class="text-lg mb-2">So grateful for you, your awesome vibe, and maybe *most* importantly, the fact you haven't blocked me yet despite my questionable jokes. 😉</p>
+                    <p class="text-lg mb-2">eeeh najua ulikuwa umegojea uone nini iyo inafuguliwa 🤢.......anywho straight to it (sasaaaa wanjaaaaa!). Twenty-five years – that's truly incredible!</p>
+                    <p class="text-lg mb-2">So grateful for you, your awesome vibe, and maybe *most* importantly, the fact you haven't blocked me yet despite my questionable humour. I guess i'm Lucky too!!😉</p>
                     <p class="text-lg mb-2">Seriously though, praying this year is your best one yet, filled with deep joy, blessings, and everything you hope for.</p>
                     <p class="text-sm text-gray-600 mt-4">Lots of love on your birthday!</p>
                 </div>
 
+
                 <div id="quality-time-message-container" class="quality-time-message">
                     <p id="typing-intro" class="italic text-sm mb-3 text-gray-600"></p>
-                    <p id="typing-main" class="mb-3"></p>
-                    <p id="typing-prayer" class="font-semibold text-gray-700"></p>
+                    <p id="typing-main" class="mb-3"></p> <p id="typing-prayer" class="font-semibold text-gray-700"></p>
                 </div>
 
                  <div class="bible-verse text-center">
@@ -223,10 +279,22 @@
     <script>
         // --- === Configuration === ---
         const targetDate = new Date(2025, 3, 25, 0, 0, 0).getTime(); // User edit: 25th April
-        const typingSpeed = 100; // Milliseconds per character
-        const textIntro = "(Picture me writing this because I actually did... as you know typing ain't my thing apart from today! 😉)";
-        const textMain = "I just want to spend time with you – time that we never had back then. We could do all the activities under the sun, but I feel like nothing beats quality time: talking about who we've become, some of the experiences we've gone through, our journey in Christ and how that's going. Getting to laugh or smile just because we can, we're all on borrowed time and got to make the most out of it.";
-        const textPrayer = "And I PRAY that all of our family and friends (including us, ofc) live to not only be old and grey but also experience a fulfilled life guided by OUR FATHER in Heaven, once again happy Birthday ras toto.";
+        const typingSpeed = 117; // Milliseconds per character
+        const textIntro = "(Picture me writing this ................................ as you know typing ain't my thing , but today I'll make an exception because someone's got🔥🧓Older! 😍)";
+        const textMain = "In just 23 days, we'll have a precious opportunity to see each other again— something neither of us expected. We could fill our time with countless activities, but what truly matters is the QUALITY of the moments we share. Just you and me, catching up on who we've become, sharing the stories of our journeys, whilst reflecting on our paths in Faith and Obedience.<br><br>Imagine us, lost in conversation, laughing until our cheeks hurt, or simply smiling at each other, grateful for every second. Life is fleeting, and these moments are ours to cherish. Let's make the most of this borrowed time, creating memories that will warm our hearts for years to come.";
+        const textPrayer = "I PRAY that all of our family and friends (including us, ofc) live to not only be old and grey but also experience a fulfilled life guided by OUR FATHER in Heaven, once again happy Birthday ras toto.";
+        const peepingMessages = [
+            "Hey! Tulia wacha haraka... 😉",
+            "Still snooping, kwani ww ni snoop dog?",
+            "Not time yet! Be goone.",
+            "Is it April 25th?? ... Nope.",
+            "Getting closer! Grey hair inbound... 👀",
+            "Are we there yet? NOOOPE!",
+            "Sister? You're back!",
+            "Wooow no comment!",
+            "Soon™️",
+            "I know you're eager! lakini wueeh relax"
+        ];
         // --- === End Configuration === ---
 
         // --- === Get HTML Elements === ---
@@ -243,6 +311,9 @@
         const typingIntroElement = document.getElementById('typing-intro');
         const typingMainElement = document.getElementById('typing-main');
         const typingPrayerElement = document.getElementById('typing-prayer');
+        const avatarTextElement = document.getElementById('avatar-text');
+        const peepingAvatarContainer = document.getElementById('peeping-avatar-container');
+        const peepingMessageElement = document.getElementById('peeping-message');
 
         // --- === Global Variables === ---
         let countdownInterval;
@@ -312,15 +383,25 @@
                 return;
             }
 
+            // Calculate remaining time
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+            // Update countdown display
             daysElement.textContent = String(days).padStart(2, '0');
             hoursElement.textContent = String(hours).padStart(2, '0');
             minutesElement.textContent = String(minutes).padStart(2, '0');
             secondsElement.textContent = String(seconds).padStart(2, '0');
+
+            // Update peeping avatar message - Use cycling messages based on MINUTE
+            if (peepingMessageElement && peepingMessages.length > 0) {
+                const messageIndex = minutes % peepingMessages.length;
+                if (peepingMessageElement.textContent !== peepingMessages[messageIndex]) {
+                     peepingMessageElement.textContent = peepingMessages[messageIndex];
+                }
+            }
         }
 
         function showCountdownContent() {
@@ -328,6 +409,8 @@
             if (lockedMessageBox) lockedMessageBox.classList.remove('hidden');
             if (revealContainer) revealContainer.classList.add('hidden');
             if (birthdayTitleMessageElement) birthdayTitleMessageElement.classList.add('hidden');
+            if (avatarTextElement) avatarTextElement.textContent = 'Editing';
+            if (peepingAvatarContainer) peepingAvatarContainer.classList.remove('hidden'); // Show peeper
         }
 
         function showBirthdayContent() {
@@ -336,6 +419,13 @@
             if (revealContainer) revealContainer.classList.remove('hidden');
             if (birthdayTitleMessageElement) birthdayTitleMessageElement.classList.remove('hidden');
             if (unlockedContent) unlockedContent.classList.remove('hidden');
+            if (peepingAvatarContainer) peepingAvatarContainer.classList.add('hidden'); // Hide peeper
+
+            // Change avatar text on reveal - REVERTED to Final Cut!
+            if (avatarTextElement) {
+                avatarTextElement.textContent = 'Final Cut';
+                 avatarTextElement.style.fontSize = '1.5rem'; // Adjust font size
+            }
 
             launchConfetti(); // Trigger confetti
 
@@ -369,7 +459,7 @@
         } else {
             showCountdownContent();
             countdownInterval = setInterval(updateCountdown, 1000);
-            updateCountdown();
+            updateCountdown(); // Initial call to set timer and peeping message
         }
         // --- End Initial Load Logic ---
 
