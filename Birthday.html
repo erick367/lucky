@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ras Toto's Special Countdown!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* Basic body styling with subtle pattern background */
+        body {
+            font-family: 'Inter', sans-serif; /* Default font */
+            background:
+                url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23166534' fill-opacity='0.08'%3E%3Ccircle cx='20' cy='60' r='3'/%3E%3Ccircle cx='70' cy='10' r='2'/%3E%3C/g%3E%3Cg fill='%23A855F7' fill-opacity='0.07'%3E%3C!-- Teddy Head --%3E%3Ccircle cx='55' cy='25' r='5'/%3E%3Ccircle cx='50' cy='20' r='3'/%3E%3Ccircle cx='60' cy='20' r='3'/%3E%3C!-- Another Teddy Head --%3E%3Ccircle cx='15' cy='45' r='4'/%3E%3Ccircle cx='11' cy='41' r='2.5'/%3E%3Ccircle cx='19' cy='41' r='2.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                linear-gradient(135deg, #fce7f3 0%, #dcfce7 100%);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Apply Pacifico font to titles */
+        #main-title, #birthday-title-message {
+            font-family: 'Pacifico', cursive;
+        }
+
+        /* Styling for individual countdown blocks */
+        .countdown-block {
+            background-color: #ffffff; padding: 1rem 1.5rem; border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); min-width: 80px; text-align: center;
+            border: 2px solid #ec4899; transition: all 0.3s ease; transform-style: preserve-3d;
+        }
+        .countdown-block:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); }
+        /* UPDATED countdown value color */
+        .countdown-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #166534; /* Changed to Forest Green */
+            line-height: 1.1;
+        }
+        .countdown-label { font-size: 0.8rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem; }
+
+        /* Styling for the locked content overlay */
+        .locked-overlay { background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); border: 2px dashed #ec4899; }
+
+        /* Animations */
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes heartBeat { 0% { transform: scale(1); } 14% { transform: scale(1.03); } 28% { transform: scale(1); } 42% { transform: scale(1.03); } 70% { transform: scale(1); } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        @keyframes twinkle { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        @keyframes glow { from { box-shadow: 0 0 10px #ec4899, 0 0 20px #ec4899, 0 0 30px #166534, 0 0 40px rgba(236, 72, 153, 0.5), 0 0 50px rgba(22, 101, 52, 0.5); } to { box-shadow: 0 0 20px #ec4899, 0 0 30px #ec4899, 0 0 40px #166534, 0 0 50px rgba(236, 72, 153, 0.7), 0 0 60px rgba(22, 101, 52, 0.7); } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes bounceWord { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Apply animations */
+        .avatar {
+            width: 120px; height: 120px; margin: 2rem auto;
+            animation: bounce 2s infinite;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #166534; border: 3px solid #FFFFFF;
+            border-radius: 50%; color: #FFFFFF; font-size: 1.75rem;
+            font-weight: 600; text-align: center;
+        }
+        .fade-in { animation: fadeIn 1s ease-in; }
+        .heart-beat { animation: heartBeat 2s infinite; }
+        .float { animation: float 3s ease-in-out infinite; }
+        .twinkle { animation: twinkle 1.5s ease-in-out infinite; }
+        .slide-in { animation: slideIn 0.8s ease-out; }
+        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .glow { animation: glow 2s ease-in-out infinite alternate; }
+        .rotate { animation: rotate 3s linear infinite; }
+        .bounce-word { display: inline-block; animation: bounceWord 2s infinite; }
+
+        /* Styling for message sections */
+        .bible-verse { font-style: italic; background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%); padding: 1.5rem; border-radius: 1rem; margin: 2rem 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); }
+        .birthday-message { text-align: center; margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%); border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transform: perspective(1000px) rotateX(5deg); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .birthday-message:hover { transform: perspective(1000px) rotateX(0deg) translateY(-5px); }
+        .quality-time-message { margin: 1.5rem 0 2rem 0; padding: 1.5rem; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%); border-radius: 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); text-align: center; font-size: 0.95rem; line-height: 1.6; min-height: 150px; }
+
+        /* Container for the countdown blocks */
+        .countdown-container { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; }
+
+        /* Styling for the initial locked message box */
+        .locked-message-box { background: linear-gradient(135deg, #fce7f3 0%, #dcfce7 100%); border: 2px dashed #ec4899; border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative; }
+        .locked-message-box::after { content: ''; position: absolute; bottom: -20px; left: 0; right: 0; height: 20px; background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent); filter: blur(5px); z-index: -1; }
+        .locked-title { color: #ec4899; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .locked-subtitle { color: #6b7280; font-size: 1rem; }
+
+        /* Blinking cursor effect */
+        .typing-cursor { display: inline-block; width: 2px; height: 1em; background-color: #6b7280; animation: blink 0.7s infinite; margin-left: 2px; vertical-align: text-bottom; }
+
+        /* Reduced motion accessibility */
+        @media (prefers-reduced-motion: reduce) {
+           .avatar, .heart-beat, .float, .twinkle, .slide-in, .pulse, .glow, .rotate, .bounce-word, .typing-cursor {
+            animation: none !important;
+            transition: none !important;
+          }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .countdown-container { gap: 0.5rem; margin: 1.5rem 0; }
+            .countdown-block { padding: 0.75rem 1rem; min-width: 60px; }
+            .countdown-value { font-size: 2rem; }
+            .avatar { width: 100px; height: 100px; font-size: 1.5rem; }
+            .birthday-message, .quality-time-message { margin: 1.5rem 0; padding: 1.5rem; }
+            .bible-verse { margin: 1.5rem 0; padding: 1.25rem; }
+            .locked-message-box { margin: 1.5rem 0; padding: 1.25rem; }
+            #reveal-container { padding: 1.5rem; }
+            @keyframes bounceWord { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } 60% { transform: translateY(-3px); } }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg max-w-lg w-full text-center overflow-hidden">
+
+        <h1 id="main-title" class="text-2xl sm:text-3xl font-bold mb-4 slide-in">
+            <span class="text-pink-600">
+                <span class="bounce-word" style="animation-delay: 0s;">Ras</span>
+                <span class="bounce-word" style="animation-delay: 0.1s;">Toto's</span>
+            </span>
+            <span style="color: #166534;"> <span class="bounce-word" style="animation-delay: 0.2s;">Special</span>
+                <span class="bounce-word" style="animation-delay: 0.3s;">Day</span>
+            </span>
+        </h1>
+        <p class="text-gray-700 mb-8 slide-in">Tick Tock.......</p>
+
+        <div class="avatar">Editing</div>
+
+        <div id="countdown-container" class="countdown-container">
+             <div class="countdown-block"> <div id="days" class="countdown-value">00</div> <div class="countdown-label">Days</div> </div>
+             <div class="countdown-block"> <div id="hours" class="countdown-value">00</div> <div class="countdown-label">Hours</div> </div>
+             <div class="countdown-block"> <div id="minutes" class="countdown-value">00</div> <div class="countdown-label">Mins</div> </div>
+             <div class="countdown-block"> <div id="seconds" class="countdown-value">00</div> <div class="countdown-label">Secs</div> </div>
+        </div>
+
+        <div id="locked-message-box" class="locked-message-box">
+            <div class="locked-title">Locked until your Birthday!</div>
+            <div class="locked-subtitle">Check back on the special day!</div>
+        </div>
+
+        <div id="birthday-title-message" class="hidden text-3xl font-bold my-8 slide-in">
+            <span class="text-pink-600">
+                <span class="bounce-word" style="animation-delay: 0s;">🎉</span>
+                <span class="bounce-word" style="animation-delay: 0.1s;">Happy</span>
+            </span>
+            <span style="color: #166534;"> <span class="bounce-word" style="animation-delay: 0.2s;">Birthday</span>
+                <span class="bounce-word" style="animation-delay: 0.3s;">lucky!!🎉</span>
+            </span>
+        </div>
+
+        <div id="reveal-container" class="bg-gradient-to-br from-pink-50 to-green-50 p-6 rounded-lg relative glow hidden">
+
+            <div id="locked-section-overlay" class="absolute inset-0 flex flex-col items-center justify-center locked-overlay rounded-lg p-4 hidden">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock mb-2 twinkle"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                 <p class="text-pink-600 font-semibold">Locked until your Birthday!</p>
+                 <p class="text-sm text-gray-600 mt-1">Check back on the special day!</p>
+            </div>
+
+            <div id="unlocked-content" class="hidden text-left space-y-3 text-gray-800 fade-in">
+
+                <div class="birthday-message text-center">
+                    <p class="text-lg mb-2 font-semibold text-pink-600">Happy 25th Birthday, Wanja! ✨</p>
+                    <p class="text-lg mb-2">Okay, attempting the heartfelt message again (sasaaaa!). Twenty-five years – that's truly incredible!</p>
+                    <p class="text-lg mb-2">So grateful for you, your awesome vibe, and maybe *most* importantly, the fact you haven't blocked me yet despite my questionable jokes. 😉</p>
+                    <p class="text-lg mb-2">Seriously though, praying this year is your best one yet, filled with deep joy, blessings, and everything you hope for.</p>
+                    <p class="text-sm text-gray-600 mt-4">Lots of love on your birthday!</p>
+                </div>
+
+                <div id="quality-time-message-container" class="quality-time-message">
+                    <p id="typing-intro" class="italic text-sm mb-3 text-gray-600"></p>
+                    <p id="typing-main" class="mb-3"></p>
+                    <p id="typing-prayer" class="font-semibold text-gray-700"></p>
+                </div>
+
+                 <div class="bible-verse text-center">
+                    <p class="font-semibold text-pink-700">"For I know the plans I have for you," declares the LORD,</p>
+                    <p class="font-semibold" style="color: #166534;">"plans to prosper you and not to harm you,</p> <p class="font-semibold text-pink-700">plans to give you hope and a future."</p>
+                    <p class="text-sm mt-2">- Jeremiah 29:11</p>
+                </div>
+
+                <div class="mt-6 p-4 bg-gradient-to-r from-pink-50 to-green-50 rounded-lg heart-beat">
+                    <p class="text-center font-semibold">
+                        <span class="text-pink-600">Can't wait to re-celebrate with you</span>
+                        <span style="color: #166534;">and make new memories!</span> </p>
+                    <p class="text-center mt-2 text-sm">P.S. Just be you, bring your beautiful smile, and get ready for lots of eye contact! 😊</p>
+                </div>
+
+            </div> </div> </div>
+
+    <script>
+        // --- === Configuration === ---
+        const targetDate = new Date(2025, 3, 25, 0, 0, 0).getTime(); // User edit: 25th April
+        const typingSpeed = 100; // Milliseconds per character
+        const textIntro = "(Picture me writing this because I actually did... as you know typing ain't my thing apart from today! 😉)";
+        const textMain = "I just want to spend time with you – time that we never had back then. We could do all the activities under the sun, but I feel like nothing beats quality time: talking about who we've become, some of the experiences we've gone through, our journey in Christ and how that's going. Getting to laugh or smile just because we can, we're all on borrowed time and got to make the most out of it.";
+        const textPrayer = "And I PRAY that all of our family and friends (including us, ofc) live to not only be old and grey but also experience a fulfilled life guided by OUR FATHER in Heaven, once again happy Birthday ras toto.";
+        // --- === End Configuration === ---
+
+        // --- === Get HTML Elements === ---
+        const countdownContainer = document.getElementById('countdown-container');
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const birthdayTitleMessageElement = document.getElementById('birthday-title-message');
+        const lockedMessageBox = document.getElementById('locked-message-box');
+        const revealContainer = document.getElementById('reveal-container');
+        const unlockedContent = document.getElementById('unlocked-content');
+        const typingContainerElement = document.getElementById('quality-time-message-container');
+        const typingIntroElement = document.getElementById('typing-intro');
+        const typingMainElement = document.getElementById('typing-main');
+        const typingPrayerElement = document.getElementById('typing-prayer');
+
+        // --- === Global Variables === ---
+        let countdownInterval;
+        let typingInProgress = false;
+        let observer;
+        let confettiInstance;
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+        // --- === Typing Effect Logic === ---
+        function typeWriter(element, text, speed, callback) {
+             if (!element) return;
+            element.innerHTML = '';
+            let i = 0;
+            const cursorSpan = prefersReducedMotion ? '' : '<span class="typing-cursor"></span>';
+            element.innerHTML = cursorSpan;
+
+            function type() {
+                 if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1) + cursorSpan;
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    setTimeout(() => {
+                         element.innerHTML = text;
+                         if (callback) callback();
+                    }, 300);
+                }
+            }
+            setTimeout(type, speed);
+        }
+
+        function startTypingSequence() {
+             if (!typingInProgress && typingIntroElement && typingMainElement && typingPrayerElement) {
+                typingInProgress = true;
+                typeWriter(typingIntroElement, textIntro, typingSpeed, () => {
+                    typeWriter(typingMainElement, textMain, typingSpeed, () => {
+                        typeWriter(typingPrayerElement, textPrayer, typingSpeed, () => {
+                            console.log("All typing complete!");
+                        });
+                    });
+                });
+            }
+        }
+        // --- End Typing Effect Logic ---
+
+
+        // --- === Confetti Logic === ---
+        function launchConfetti() {
+            if (typeof confetti === 'function' && !prefersReducedMotion) {
+                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        }
+        // --- End Confetti Logic ---
+
+
+        // --- === Countdown and Reveal Logic === ---
+        function updateCountdown() {
+             const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance <= 0) {
+                clearInterval(countdownInterval);
+                showBirthdayContent();
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysElement.textContent = String(days).padStart(2, '0');
+            hoursElement.textContent = String(hours).padStart(2, '0');
+            minutesElement.textContent = String(minutes).padStart(2, '0');
+            secondsElement.textContent = String(seconds).padStart(2, '0');
+        }
+
+        function showCountdownContent() {
+            if (countdownContainer) countdownContainer.classList.remove('hidden');
+            if (lockedMessageBox) lockedMessageBox.classList.remove('hidden');
+            if (revealContainer) revealContainer.classList.add('hidden');
+            if (birthdayTitleMessageElement) birthdayTitleMessageElement.classList.add('hidden');
+        }
+
+        function showBirthdayContent() {
+            if (countdownContainer) countdownContainer.classList.add('hidden');
+            if (lockedMessageBox) lockedMessageBox.classList.add('hidden');
+            if (revealContainer) revealContainer.classList.remove('hidden');
+            if (birthdayTitleMessageElement) birthdayTitleMessageElement.classList.remove('hidden');
+            if (unlockedContent) unlockedContent.classList.remove('hidden');
+
+            launchConfetti(); // Trigger confetti
+
+            if (typingContainerElement) { // Setup observer for typing
+                 setupTypingObserver();
+            }
+        }
+
+        function setupTypingObserver() {
+             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !typingInProgress) {
+                        console.log("Typing container visible, starting typing...");
+                        startTypingSequence();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+            observer = new IntersectionObserver(observerCallback, observerOptions);
+            observer.observe(typingContainerElement);
+        }
+        // --- End Countdown and Reveal Logic ---
+
+
+        // --- === Initial Load Logic === ---
+        // Check date and set initial state
+        const now = new Date().getTime();
+        if (now >= targetDate) {
+            showBirthdayContent();
+        } else {
+            showCountdownContent();
+            countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+        // --- End Initial Load Logic ---
+
+    </script>
+
+</body>
+</html>
